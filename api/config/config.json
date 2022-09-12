@@ -1,10 +1,10 @@
 {
   "development": {
     "username": "root",
-    "password": "root",
-    "database": "api_v1",
+    "password": "123456",
+    "database": "tpintegrador",
     "host": "localhost",
-    "dialect": "mariadb",
+    "dialect": "mysql",
     "operatorsAliases": false
   }
 }
