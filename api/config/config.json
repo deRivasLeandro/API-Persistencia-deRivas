@@ -5,6 +5,6 @@
     "database": "tpintegrador",
     "host": "localhost",
     "dialect": "mysql",
-    "operatorsAliases": false
+    "operatorsAliases": 1
   }
 }
