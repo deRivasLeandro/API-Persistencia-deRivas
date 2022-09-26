@@ -3,11 +3,10 @@ var router = express.Router();
 var models = require("../models");
 
 router.get("/", (req, res) => {
-  console.log("Esto es un mensaje para ver en consola");
   models.profesores
     .findAll({
-      attributes: ["id", "nombre", "id_materia"],
-      include:[{as: 'id_materia',
+      attributes: ["id", "nombre"],
+      include:[{as: 'materia-que-dicta',
                 model: models.materias,
                 attributes: ['id', 'nombre', 'id_carrera']}]
     })
@@ -17,8 +16,8 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
   models.profesores
-    .create({ nombre: req.body.nombre, id_materia: req.body.id_carrera  })
-    .then(profesores => res.status(201).send({ id: profesores.id }))
+    .create({ nombre: req.body.nombre, id_materia: req.body.id_materia  })
+    .then(profesores => res.status(201).send({ id: profesores.id, id_materia: profesores.id_materia }))
     .catch(error => {
       if (error == "SequelizeUniqueConstraintError: Validation error") {
         res.status(400).send('Bad request: existe otro profesor con el mismo id')
@@ -33,7 +32,10 @@ router.post("/", (req, res) => {
 const findProfesor = (id, { onSuccess, onNotFound, onError }) => {
   models.profesores
     .findOne({
-      attributes: ["id", "nombre", "id_materia"],
+      attributes: ["id", "nombre"],
+      include:[{as: 'materia-que-dicta',
+                model: models.materias,
+                attributes: ['id', 'nombre']}],
       where: { id }
     })
     .then(profesores => (profesores ? onSuccess(profesores) : onNotFound()))

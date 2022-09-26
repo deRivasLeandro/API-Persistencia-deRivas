@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {}
   }
   profesores.init({
-    nombre: DataTypes.STRING
+    nombre: DataTypes.STRING,
+    id_materia: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'profesores',
@@ -16,10 +17,10 @@ module.exports = (sequelize, DataTypes) => {
   profesores.associate = function(models) {
     profesores.belongsTo(models.materias,
         {
-            as:'id_materia',
-            foreignKey: 'id'
+            as:'materia-que-dicta',
+            foreignKey: 'id_materia'
         } )
-    }
+    };
 
   return profesores;
 };

@@ -13,5 +13,14 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'materias',
   });
+
+  materias.associate = function(models) {
+    materias.belongsTo(models.carrera,
+        {
+            as:'carrera-a-la-que-pertenece',
+            foreignKey: 'id_carrera'
+        } )
+    };
+
   return materias;
 };

@@ -7,7 +7,6 @@ var carrerasRouter = require('./routes/carreras');
 var materiasRouter = require('./routes/materias');
 var profesoresRouter = require('./routes/profesores');
 
-
 var app = express();
 
 // view engine setup
