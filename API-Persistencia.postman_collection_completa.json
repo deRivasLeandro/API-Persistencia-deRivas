@@ -94,6 +94,24 @@
 					"response": []
 				},
 				{
+					"name": "Consultar una carrera en particular",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/car/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"car",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Modificar carrera",
 					"request": {
 						"method": "PUT",
@@ -220,6 +238,24 @@
 					"response": []
 				},
 				{
+					"name": "Consultar una materia en particular",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/mat/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"mat",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Modificar materia",
 					"request": {
 						"method": "PUT",
@@ -336,6 +372,24 @@
 							"path": [
 								"prof",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar un profesor en particular",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/prof/1",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"prof",
+								"1"
 							]
 						}
 					},
