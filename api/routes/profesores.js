@@ -3,6 +3,7 @@ var router = express.Router();
 var models = require("../models");
 
 router.get("/", (req, res) => {
+  console.log("Realizando la petición de Get a la Api.")
   models.profesores
     .findAll({
       attributes: ["id", "nombre"],
@@ -10,14 +11,17 @@ router.get("/", (req, res) => {
                 model: models.materias,
                 attributes: ['id', 'nombre', 'id_carrera']}]
     })
-    .then(profesores => res.send(profesores))
+    .then(profesores => res.send(profesores),
+      console.log("Petición realizada con éxito."))
     .catch(() => res.sendStatus(500));
 });
 
 router.post("/", (req, res) => {
+  console.log("Realizando la petición de Post a la Api.")
   models.profesores
     .create({ nombre: req.body.nombre, id_materia: req.body.id_materia  })
-    .then(profesores => res.status(201).send({ id: profesores.id, id_materia: profesores.id_materia }))
+    .then(profesores => res.status(201).send({ id: profesores.id, id_materia: profesores.id_materia }),
+      console.log("Petición realizada con éxito."))
     .catch(error => {
       if (error == "SequelizeUniqueConstraintError: Validation error") {
         res.status(400).send('Bad request: existe otro profesor con el mismo id')
@@ -30,6 +34,7 @@ router.post("/", (req, res) => {
 });
 
 const findProfesor = (id, { onSuccess, onNotFound, onError }) => {
+  console.log("Realizando la búsqueda de profesor por ID.")
   models.profesores
     .findOne({
       attributes: ["id", "nombre"],
@@ -43,6 +48,7 @@ const findProfesor = (id, { onSuccess, onNotFound, onError }) => {
 };
 
 router.get("/:id", (req, res) => {
+  console.log("Realizando la petición de Get por ID a la Api.")
   findProfesor(req.params.id, {
     onSuccess: profesores => res.send(profesores),
     onNotFound: () => res.sendStatus(404),
@@ -51,6 +57,7 @@ router.get("/:id", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
+  console.log("Realizando la petición de Put a la Api.")
   const onSuccess = profesor =>
     profesor
       .update({ nombre: req.body.nombre, id_carrera: req.body.id_carrera }, { fields: ["nombre", "id_carrera"] })
@@ -72,6 +79,7 @@ router.put("/:id", (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
+  console.log("Realizando la petición de Delete a la Api.")
   const onSuccess = profesores =>
     profesores
       .destroy()
