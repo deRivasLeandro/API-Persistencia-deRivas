@@ -6,8 +6,13 @@ var logger = require('morgan');
 var carrerasRouter = require('./routes/carreras');
 var materiasRouter = require('./routes/materias');
 var profesoresRouter = require('./routes/profesores');
+var jwtRouter = require('./routes/jwt');
+const dotenv = require('dotenv');
 
 var app = express();
+
+// Set up Global configuration access
+dotenv.config();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,12 +28,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/car', carrerasRouter);
 app.use('/mat', materiasRouter);
 app.use('/prof', profesoresRouter);
+app.use('/jwt', jwtRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
-
 
 // error handler
 app.use(function(err, req, res, next) {
@@ -40,5 +44,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// VIENE CON LA AUTENTICACIÓN
+// Allow json data
+app.use(express.json());
 
 module.exports = app;

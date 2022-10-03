@@ -4,8 +4,11 @@ var models = require("../models");
 
 router.get("/", (req, res) => {
   console.log("Realizando la petición de Get a la Api.");
+  const offsetParam = parseInt(req.query.pagina)*10-10;
   models.materias
     .findAll({
+      offset: offsetParam, 
+      limit: 10, 
       attributes: ["id", "nombre"],
       include:[{as: 'carrera-a-la-que-pertenece',
                 model: models.carrera,
