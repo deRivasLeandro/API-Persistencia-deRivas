@@ -64,7 +64,7 @@
 					"response": []
 				},
 				{
-					"name": "Consultar carreras",
+					"name": "Consultar carreras (desde la 11 hasta la 20 = página 2)",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -81,13 +81,24 @@
 							}
 						},
 						"url": {
-							"raw": "{{HOST}}/car/",
+							"raw": "{{HOST}}/car/?pagina=2",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"car",
 								""
+							],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "2"
+								},
+								{
+									"key": "limit",
+									"value": "5",
+									"disabled": true
+								}
 							]
 						}
 					},
@@ -177,7 +188,12 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nombre\":\"Estrategias de Persistencia\",\r\n    \"id_carrera\":1\r\n}"
+							"raw": "{\r\n    \"nombre\":\"Estrategias de Persistencia\",\r\n    \"id_carrera\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
 							"raw": "{{HOST}}/mat/",
@@ -220,18 +236,24 @@
 					"response": []
 				},
 				{
-					"name": "Consultar materias",
+					"name": "Consultar materias (desde la 11 hasta la 20 = página 2)",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{HOST}}/mat/",
+							"raw": "{{HOST}}/mat/?pagina=2",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"mat",
 								""
+							],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -360,18 +382,24 @@
 					"response": []
 				},
 				{
-					"name": "Consultar profesores",
+					"name": "Consultar profesores (desde la 11 hasta la 20 = página 2)",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{HOST}}/prof/",
+							"raw": "{{HOST}}/prof/?pagina=2",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"prof",
 								""
+							],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -441,8 +469,65 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Pedir token",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"jwt\", pm.response.text());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/jwt/generateToken",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"jwt",
+						"generateToken"
+					]
+				}
+			},
+			"response": []
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -466,6 +551,11 @@
 	"variable": [
 		{
 			"key": "HOST",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "jwt",
 			"value": "",
 			"type": "string"
 		}
