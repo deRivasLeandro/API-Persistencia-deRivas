@@ -93,6 +93,35 @@ router.delete("/:id", (req, res) => {
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
   });
+
+  router.get("/:id", (req, res) => {
+    const onSuccess = materia =>
+        findPlan(materia.id, {
+            onSuccess: planCarrera => res.send(planCarrera),
+            onNotFound: () => res.sendStatus(404),
+            onError: () => res.sendStatus(500)
+            })
+    findMateria(req.params.id, {
+      onSuccess,
+      onNotFound: () => res.sendStatus(404),
+      onError: () => res.sendStatus(500)
+    });
+  });
+  router.post("/alumno_materia/:id", (req, res) => {
+    const dni_alumno = req.body.dni_alumno
+    models.alumno_materia
+      .create({ id_materia: req.params.id, dni_alumno})
+      .then(() => res.status(201).send("Relación registrada"))
+      .catch(error => {
+        if (error == "SequelizeUniqueConstraintError: Validation error") {
+          res.status(400).send('Bad request: existe otra carrera con el mismo nombre')
+        }
+        else {
+          console.log(`Error al intentar insertar en la base de datos: ${error}`)
+          res.sendStatus(500)
+        }
+      });
+  });
 });
 
 module.exports = router;

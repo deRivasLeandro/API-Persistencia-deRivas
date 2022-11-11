@@ -93,4 +93,32 @@ router.delete("/:id", (req, res) => {
   });
 });
 
+router.get("/alumnos/:id", (req, res) => {    
+  const onSuccess = carrera =>
+    findAlumnos(carrera.id, {
+        onSuccess: enCarrera => res.send(enCarrera),
+        onNotFound: () => res.sendStatus(404),
+        onError: () => res.sendStatus(500)
+        })
+  findCarrera(req.params.id, {
+    onSuccess,
+    onNotFound: () => res.sendStatus(404),
+    onError: () => res.sendStatus(500)
+  });
+});
+
+const findAlumnos = (id_carrera, { onSuccess, onNotFound, onError }) => {
+  models.alumnos_carrera
+    .findAll({
+      attributes: [['id_carrera','Carrera'], "dni_alumno"],
+      include:[{as:'alumnos',
+                model:models.carrera,
+                attributes: ["nombre"]}
+              ],
+      where:  {id_carrera}
+    })
+    .then(datos=> (datos ? onSuccess(datos): onNotFound()))
+    .catch(() => onError());
+};
+
 module.exports = router;
