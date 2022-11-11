@@ -8,10 +8,9 @@ var materiasRouter = require('./routes/materias');
 var profesoresRouter = require('./routes/profesores');
 var alumnosRouter = require('./routes/alumnos');
 const dotenv = require('dotenv');
-const keys = require('./settings/keys')
+const keys = require('./settings/keys');
 var app = express();
 const jwt = require('jsonwebtoken');
-const { json } = require('sequelize/types');
 
 app.set('key', keys.key);
 
@@ -96,9 +95,4 @@ verificiacion.use((req,res,next)=>{
   })
 }
 });
-
-app.get('/eseeequiso', verificiacion, (res, req)=>{
-  res.json("eseeequiso");
-})
-
 module.exports = app;
