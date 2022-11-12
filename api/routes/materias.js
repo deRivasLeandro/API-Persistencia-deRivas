@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
 var models = require("../models");
+var verificacion = require("../verificacion");
 
-router.get("/", (req, res) => {
+router.get("/", verificacion, (req, res) => {
   console.log("Realizando la petición de Get a la Api.");
   const offsetParam = parseInt(req.query.pagina)*10-10;
   models.materias
@@ -19,7 +20,7 @@ router.get("/", (req, res) => {
     .catch(() => res.sendStatus(500));
 });
 
-router.post("/", (req, res) => {
+router.post("/", verificacion, (req, res) => {
   console.log("Realizando la petición de Post a la Api.");
   models.materias
     .create({ nombre: req.body.nombre, id_carrera: req.body.id_carrera  })
@@ -50,7 +51,7 @@ const findMateria = (id, { onSuccess, onNotFound, onError }) => {
     .catch(() => onError());
 };
 
-router.get("/:id", (req, res) => {
+router.get("/:id", verificacion, (req, res) => {
   console.log("Realizando la petición de Get por ID a la Api.");
   findMateria(req.params.id, {
     onSuccess: materias => res.send(materias),
@@ -59,7 +60,7 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", verificacion, (req, res) => {
   console.log("Realizando la petición de Put a la Api.");
   const onSuccess = materia =>
     materia
@@ -81,7 +82,7 @@ router.put("/:id", (req, res) => {
   });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", verificacion, (req, res) => {
   console.log("Realizando la petición de Delete a la Api.");
   const onSuccess = materias =>
     materias
@@ -94,7 +95,7 @@ router.delete("/:id", (req, res) => {
     onError: () => res.sendStatus(500)
   });
 
-  router.get("/:id", (req, res) => {
+  router.get("/:id", verificacion, (req, res) => {
     const onSuccess = materia =>
         findPlan(materia.id, {
             onSuccess: planCarrera => res.send(planCarrera),
@@ -107,7 +108,7 @@ router.delete("/:id", (req, res) => {
       onError: () => res.sendStatus(500)
     });
   });
-  router.post("/alumno_materia/:id", (req, res) => {
+  router.post("/alumno_materia/:id", verificacion, (req, res) => {
     const dni_alumno = req.body.dni_alumno
     models.alumno_materia
       .create({ id_materia: req.params.id, dni_alumno})

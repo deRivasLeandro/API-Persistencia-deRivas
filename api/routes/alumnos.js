@@ -44,14 +44,14 @@ const findAlumno = (dni, { onSuccess, onNotFound, onError }) => {
     .catch(() => onError());
 };
 
-router.get("/:dni", (req, res) => {
+router.get("/:dni", verificacion, (req, res) => {
   findAlumno(req.params.dni, {
     onSuccess: alumno => res.send(alumno),
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
   });
 });
-router.get("/materias/:dni", (req, res) => {
+router.get("/materias/:dni", verificacion, (req, res) => {
   const onSuccess = alumno => 
     materiasQueCursa(alumno.dni, {
         onSuccess: materia => res.send(materia),
@@ -79,7 +79,7 @@ const materiasQueCursa = (dni_alumno, { onSuccess, onNotFound, onError }) => {
     .catch(() => onError());
 };
 
-router.get("/carreras/:dni", (req, res) => {
+router.get("/carreras/:dni", verificacion, (req, res) => {
     const onSuccess = alumno => 
       carrerasQueCursa(alumno.dni, {
           onSuccess: materia => res.send(materia),
@@ -107,7 +107,7 @@ router.get("/carreras/:dni", (req, res) => {
       .catch(() => onError());
   };
 
-router.put("/:dni", (req, res) => {
+router.put("/:dni", verificacion, (req, res) => {
   const onSuccess = alumno =>
     alumno
       .update({
@@ -149,7 +149,7 @@ router.put("/:dni", (req, res) => {
         onError: () => res.sendStatus(500)
     });*/
 });
-router.delete("/:dni", (req, res) => {
+router.delete("/:dni", verificacion, (req, res) => {
   const onSuccess = alumno =>
     alumno
       .destroy()

@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
 var models = require("../models");
+var verificacion = require("../verificacion");
 
-router.get("/", (req, res) => {
+router.get("/", verificacion, (req, res) => {
   console.log("Realizando la petición de Get a la Api.");
   const offsetParam = parseInt(req.query.pagina)*10-10;
   models.carrera
@@ -16,7 +17,7 @@ router.get("/", (req, res) => {
     .catch(() => res.sendStatus(500));
 });
 
-router.post("/", (req, res) => {
+router.post("/", verificacion, (req, res) => {
   console.log("Realizando la petición de Post a la Api.");
   models.carrera
     .create({ nombre: req.body.nombre })
@@ -46,7 +47,7 @@ const findCarrera = (id, { onSuccess, onNotFound, onError }) => {
     .catch(() => onError());
 };
 
-router.get("/:id", (req, res) => {
+router.get("/:id", verificacion, (req, res) => {
   console.log("Realizando la petición de Get por ID a la Api.");
   findCarrera(req.params.id, {
     onSuccess: carrera => res.send(carrera),    
@@ -55,7 +56,7 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", verificacion, (req, res) => {
   console.log("Realizando la petición de Put a la Api.");
   const onSuccess = carrera =>
     carrera
@@ -78,7 +79,7 @@ router.put("/:id", (req, res) => {
   });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", verificacion, (req, res) => {
   console.log("Realizando la petición de Delete a la Api.");
   const onSuccess = carrera =>
     carrera
@@ -93,7 +94,7 @@ router.delete("/:id", (req, res) => {
   });
 });
 
-router.get("/alumnos/:id", (req, res) => {    
+router.get("/alumnos/:id", verificacion, (req, res) => {    
   const onSuccess = carrera =>
     findAlumnos(carrera.id, {
         onSuccess: enCarrera => res.send(enCarrera),

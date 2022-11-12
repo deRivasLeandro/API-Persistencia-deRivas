@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
 var models = require("../models");
+var verificacion = require("../verificacion");
 
-router.get("/", (req, res) => {
+router.get("/", verificacion, (req, res) => {
   console.log("Realizando la petición de Get a la Api.")
   const offsetParam = parseInt(req.query.pagina)*10-10;
   models.profesores
@@ -19,7 +20,7 @@ router.get("/", (req, res) => {
     .catch(() => res.sendStatus(500));
 });
 
-router.post("/", (req, res) => {
+router.post("/", verificacion, (req, res) => {
   console.log("Realizando la petición de Post a la Api.")
   models.profesores
     .create({ nombre: req.body.nombre, id_materia: req.body.id_materia  })
@@ -50,7 +51,7 @@ const findProfesor = (id, { onSuccess, onNotFound, onError }) => {
     .catch(() => onError());
 };
 
-router.get("/:id", (req, res) => {
+router.get("/:id", verificacion, (req, res) => {
   console.log("Realizando la petición de Get por ID a la Api.")
   findProfesor(req.params.id, {
     onSuccess: profesores => res.send(profesores),
@@ -59,7 +60,7 @@ router.get("/:id", (req, res) => {
   });
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", verificacion, (req, res) => {
   console.log("Realizando la petición de Put a la Api.")
   const onSuccess = profesor =>
     profesor
@@ -81,7 +82,7 @@ router.put("/:id", (req, res) => {
   });
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", verificacion, (req, res) => {
   console.log("Realizando la petición de Delete a la Api.")
   const onSuccess = profesores =>
     profesores
