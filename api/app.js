@@ -20,7 +20,7 @@ app.use(express.json());
 
 app.post('/login', (req, res) => {
   console.log("Realizando autenticación");
-  if(req.body.usuario == 'admin'&&req.body.pass=='12345'){
+  if(req.body.usuario == 'admin' && req.body.pass=='12345'){
     const payload = {
       check:true
     };
@@ -95,4 +95,5 @@ verificiacion.use((req,res,next)=>{
   })
 }
 });
+
 module.exports = app;

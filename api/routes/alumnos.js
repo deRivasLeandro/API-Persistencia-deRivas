@@ -1,8 +1,9 @@
 var express = require("express");
 var router = express.Router();
 var models = require("../models");
+var verificacion = require("../verificacion");
 
-router.get("/", (req, res) => {
+router.get("/", verificacion, (req, res) => {
     console.log("Realizando la petición de Get a la Api.");
     const offsetParam = parseInt(req.query.pagina)*10-10;
     models.alumno
@@ -16,7 +17,7 @@ router.get("/", (req, res) => {
       .catch(() => res.sendStatus(500));
   });
 
-router.post("/", (req, res) => {
+router.post("/", verificacion, (req, res) => {
     console.log("Realizando la petición de Post a la Api.");
     models.alumno
       .create({ dni: req.body.dni, nombre: req.body.nombre, apellido: req.body.apellido })
