@@ -10,7 +10,7 @@ router.get("/", verificacion, (req, res) => {
       .findAll({
         offset: offsetParam,
         limit: 10,
-        attributes: ["dni", "nombre", "apellido"]
+        attributes: ["id", "dni", "nombre", "apellido"]
       })
       .then(materias => res.send(materias),
         console.log("Petición realizada con éxito."))
@@ -21,7 +21,7 @@ router.post("/", verificacion, (req, res) => {
     console.log("Realizando la petición de Post a la Api.");
     models.alumno
       .create({ dni: req.body.dni, nombre: req.body.nombre, apellido: req.body.apellido })
-      .then(alumno => res.status(201).send({ dni: alumno.dni, nombre: alumno.nombre, apellido: alumno.apellido }),
+      .then(alumno => res.status(201).send({ id: alumno.id, dni: alumno.dni, nombre: alumno.nombre, apellido: alumno.apellido }),
         console.log("Petición realizada con éxito."))
       .catch(error => {
         if (error == "SequelizeUniqueConstraintError: Validation error") {
@@ -34,66 +34,67 @@ router.post("/", verificacion, (req, res) => {
       });
 });
 
-const findAlumno = (dni, { onSuccess, onNotFound, onError }) => {
+const findAlumno = (id, { onSuccess, onNotFound, onError }) => {
   models.alumno
     .findOne({
-      attributes: ["dni", "nombre", "apellido"],
-      where: { dni }
+      attributes: ["id", "dni", "nombre", "apellido"],
+      where: { id }
     })
     .then(alumno => (alumno ? onSuccess(alumno) : onNotFound()))
     .catch(() => onError());
 };
 
-router.get("/:dni", verificacion, (req, res) => {
-  findAlumno(req.params.dni, {
+router.get("/:id", verificacion, (req, res) => {
+  findAlumno(req.params.id, {
     onSuccess: alumno => res.send(alumno),
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
   });
 });
-router.get("/materias/:dni", verificacion, (req, res) => {
+
+router.get("/materias/:id", verificacion, (req, res) => {
   const onSuccess = alumno => 
-    materiasQueCursa(alumno.dni, {
-        onSuccess: materia => res.send(materia),
+    materiasQueCursa(alumno.id, {
+        onSuccess: alumno_materia => res.send(alumno_materia),
         onNotFound: () => res.sendStatus(404),
         onError: () => res.sendStatus(500)
         })
-  findAlumno(req.params.dni, {
+  findAlumno(req.params.id, {
     onSuccess,
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)
   });
 });
 
-const materiasQueCursa = (dni_alumno, { onSuccess, onNotFound, onError }) => {
+const materiasQueCursa = (id_alumno, { onSuccess, onNotFound, onError }) => {
   models.alumno_materia
     .findAll({
-      attributes: ["materias-cursando"],
+      attributes: ['id_materia'],
       include:[ {as:'Materia-Relacionada',
                 model:models.materia,
                 attributes: ["id","nombre"]}
               ],
-      where:  {dni_alumno}
+      where:  {id_alumno}
     })
     .then(not=> (not ? onSuccess(not): onNotFound()))
     .catch(() => onError());
 };
 
-router.get("/carreras/:dni", verificacion, (req, res) => {
+router.get("/carreras/:id", verificacion, (req, res) => {
     const onSuccess = alumno => 
-      carrerasQueCursa(alumno.dni, {
+      carrerasQueCursa(alumno.id, {
           onSuccess: materia => res.send(materia),
           onNotFound: () => res.sendStatus(404),
           onError: () => res.sendStatus(500)
           })
-    findAlumno(req.params.dni, {
+    findAlumno(req.params.id, {
       onSuccess,
       onNotFound: () => res.sendStatus(404),
       onError: () => res.sendStatus(500)
     });
   });
   
-  const carrerasQueCursa = (dni_alumno, { onSuccess, onNotFound, onError }) => {
+  const carrerasQueCursa = (id_alumno, { onSuccess, onNotFound, onError }) => {
     models.alumno_carrera
       .findAll({
         attributes: ["carreras-cursando"],
@@ -101,21 +102,22 @@ router.get("/carreras/:dni", verificacion, (req, res) => {
                   model:models.alumno_carrera,
                   attributes: ["id","nombre"]}
                 ],
-        where:  {dni_alumno}
+        where:  {id_alumno}
       })
       .then(not=> (not ? onSuccess(not): onNotFound()))
       .catch(() => onError());
   };
 
-router.put("/:dni", verificacion, (req, res) => {
+router.put("/:id", verificacion, (req, res) => {
   const onSuccess = alumno =>
     alumno
       .update({
+        id: req.params.id,
         dni: req.body.dni,
         nombre: req.body.nombre,
-        apellido: req.body.apellido,
+        apellido: req.body.apellido
       },
-        { fields: ["dni", "nombre", "apellido"] })
+        { fields: ["id", "dni", "nombre", "apellido"] })
       .then(() => res.sendStatus(200))
       .catch(error => {
         if (error == "SequelizeUniqueConstraintError: Validation error") {
@@ -125,6 +127,11 @@ router.put("/:dni", verificacion, (req, res) => {
           console.log(`Error al intentar actualizar la base de datos: ${error}`)
           res.sendStatus(500)
         }
+        findAlumno(req.params.id, {
+          onSuccess,
+          onNotFound: () => res.sendStatus(404),
+          onError: () => res.sendStatus(500)
+        });
       });
 
       /*router.put("/:dni", (req, res) => {
@@ -149,13 +156,15 @@ router.put("/:dni", verificacion, (req, res) => {
         onError: () => res.sendStatus(500)
     });*/
 });
-router.delete("/:dni", verificacion, (req, res) => {
+router.delete("/:id", verificacion, (req, res) => {
+  console.log("Realizando la petición de Delete a la Api.");
   const onSuccess = alumno =>
     alumno
       .destroy()
-      .then(() => res.sendStatus(200))
+      .then(() => res.sendStatus(200),
+      console.log("Petición realizada con éxito."))
       .catch(() => res.sendStatus(500));
-  findAlumno(req.params.dni, {
+  findAlumno(req.params.id, {
     onSuccess,
     onNotFound: () => res.sendStatus(404),
     onError: () => res.sendStatus(500)

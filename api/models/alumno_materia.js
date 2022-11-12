@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.alumno
       ,{
         as : 'alumno-en-materia',
-        foreignKey: 'dni_alumno',
+        foreignKey: 'id_alumno',
       });
       this.belongsTo(models.materias
       ,{
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   alumno_materia.init({
-    dni_alumno: DataTypes.INTEGER,
+    id_alumno: DataTypes.INTEGER,
     id_materia: DataTypes.INTEGER
   }, {
     sequelize,
