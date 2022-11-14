@@ -13,7 +13,12 @@ router.get("/", verificacion, (req, res) => {
       attributes: ["id", "nombre"],
       include:[{as: 'materia-que-dicta',
                 model: models.materias,
-                attributes: ['id', 'nombre', 'id_carrera']}]
+                attributes: ['id', 'nombre', 'id_carrera'],
+                include:[{as: 'carrera-a-la-que-pertenece',
+                          model: models.carrera,
+                          attributes: ['nombre']
+                }]
+      }]
     })
     .then(profesores => res.send(profesores),
       console.log("Petición realizada con éxito."))
@@ -44,7 +49,11 @@ const findProfesor = (id, { onSuccess, onNotFound, onError }) => {
       attributes: ["id", "nombre"],
       include:[{as: 'materia-que-dicta',
                 model: models.materias,
-                attributes: ['id', 'nombre']}],
+                attributes: ['id', 'nombre'],
+                include:[{as: 'carrera-a-la-que-pertenece',
+                          model: models.carrera,
+                          attributes: ['nombre']
+      }]}],
       where: { id }
     })
     .then(profesores => (profesores ? onSuccess(profesores) : onNotFound()))

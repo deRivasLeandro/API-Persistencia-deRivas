@@ -4,18 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class alumno extends Model {
-     static associate(models) {
-      this.hasMany(models.alumno_carrera
-      ,{
-        as : 'carreras-que-cursa',
-        foreignKey: 'dni_alumno'
-      })
-      this.hasMany(models.alumno_materia
-      ,{
-        as : 'materias-cursando', 
-        foreignKey: 'dni_alumno'
-      })
-    }
+     static associate(models) {}
   }
   alumno.init({
     dni: DataTypes.INTEGER,
@@ -25,5 +14,17 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'alumno',
   });
+  alumno.associate = function(models) {
+    alumno.hasMany(models.alumno_carreras
+      ,{
+        as : 'carreras-que-cursa',
+        foreignKey: 'id_alumno'
+      })
+    alumno.hasMany(models.alumno_materia
+      ,{
+        as : 'materias-cursando', 
+        foreignKey: 'id_alumno'
+      })
+  }
   return alumno;
 };

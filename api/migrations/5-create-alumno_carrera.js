@@ -1,8 +1,7 @@
 'use strict';
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('alumno_carrera', {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable('alumno_carreras', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -25,7 +24,7 @@ module.exports = {
       }
     });
   },
-  async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('alumno_carrera');
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('alumno_carreras');
   }
 };

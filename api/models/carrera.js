@@ -5,11 +5,16 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class carrera extends Model {    
      static associate(models) {
-      this.hasMany(models.alumno_carrera
+      this.hasMany(models.alumno_carreras
       ,{
         as : 'alumnos-en-carrera',
         foreignKey: 'id_carrera' 
       })
+      carrera.hasMany(models.materias, 
+        {
+          as:'materias',
+          foreignKey: 'id_carrera'
+        })
     }
   }
   carrera.init({
